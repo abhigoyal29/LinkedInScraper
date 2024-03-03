@@ -88,13 +88,18 @@ def scrape_comments(linkedin_post_url):
     # load all html source into a file
     bs_obj = bs(driver.page_source, "html.parser")
     comments = bs_obj.find_all("span", {"class": "comments-comment-item__main-content"})
-    comments = [comment.get_text(strip=True) for comment in comments]
+    # comments = [comment.get_text(strip=True) for comment in comments]
 
     emails = []
     for comment in comments:
-        email_match = re.findall(r"[\w\.-]+@[\w\.-]+\.\w+", comment)
-        if email_match:
-            emails.extend(email_match)
+        # Find all 'a' tags within the comment span
+        email_links = comment.find_all("a", href=True)
+    
+        for email_link in email_links:
+            # Filter email links
+            if email_link['href'].startswith('mailto:'):
+                email_address = email_link['href'][7:]  # Remove 'mailto:' prefix
+                emails.append(email_address)
     
     def remove_thank(string):
         return string.replace("Thank", "").replace("Thanks", "").replace("thanks", "").replace("thank", "").replace("interested", "").replace("Interested","")
