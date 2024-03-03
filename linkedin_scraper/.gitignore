@@ -3,4 +3,3 @@ __pycache__
 link_scrape
 chromedriver_mac_arm64
 .DS_STORE
-credentials.txt
