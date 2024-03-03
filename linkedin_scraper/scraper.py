@@ -109,5 +109,6 @@ def scrape_comments(linkedin_post_url):
             writer.writerow([remove_thank(email)])
 
 if __name__ == "__main__":
-    linkedin_post_url = 'https://www.linkedin.com/posts/myan_jobsearch-hiring-activity-7167941891936780289-cjMW/?utm_source=share&utm_medium=member_desktop'
-    comments = scrape_comments(linkedin_post_url)
+    # linkedin_post_url = 'https://www.linkedin.com/posts/myan_jobsearch-hiring-activity-7167941891936780289-cjMW/?utm_source=share&utm_medium=member_desktop'
+    # comments = scrape_comments(linkedin_post_url)
+    pass
