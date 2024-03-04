@@ -4,8 +4,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
-# from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService
 # from selenium import webdriver
 # from selenium.common.exceptions import TimeoutException
 # from selenium.webdriver.common.by import By
@@ -54,7 +54,7 @@ def get_webdriver_service() -> Service:
 
 def scrape_comments(url):
     driver = webdriver.Chrome(options=get_webdriver_options(),
-                        service=get_webdriver_service())
+                        service=ChromeService(ChromeDriverManager().install()))
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
