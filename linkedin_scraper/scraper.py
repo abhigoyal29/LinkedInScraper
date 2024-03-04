@@ -105,7 +105,7 @@ def scrape_comments(url):
                     break
 
         
-        # load_more("comments","comments-comments-list__load-more-comments-button", driver)
+        load_more("comments","comments-comments-list__load-more-comments-button", driver)
 
         # load all html source into a file
         bs_obj = bs(driver.page_source, "html.parser")
