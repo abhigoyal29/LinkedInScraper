@@ -11,9 +11,9 @@ import csv
 
 
 def scrape_comments(url):
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Enable headless mode
-    driver = webdriver.Chrome(options=chrome_options)
+    # chrome_options = Options()
+    # chrome_options.add_argument('--headless')  # Enable headless mode
+    driver = webdriver.Chrome()
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
