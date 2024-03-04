@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 # from selenium import webdriver
 # from selenium.common.exceptions import TimeoutException
@@ -17,20 +17,43 @@ from selenium.webdriver.chrome.service import Service
 # from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 from bs4 import BeautifulSoup as bs
-import re
 import time
 import csv
 import streamlit as st
+import os
+import shutil
 
+
+@st.cache_resource(show_spinner=False)
+def get_webdriver_options() -> Options:
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-features=NetworkService")
+    options.add_argument("--window-size=1920x1080")
+    options.add_argument("--disable-features=VizDisplayCompositor")
+    options.add_argument('--ignore-certificate-errors')
+    return options
+
+@st.cache_resource(show_spinner=False)
+def get_chromedriver_path() -> str:
+    return shutil.which('chromedriver')
+
+def get_webdriver_service() -> Service:
+    service = Service(
+        executable_path=get_chromedriver_path()
+    )
+    return service
+
+@st.cache_resource(show_spinner=False)
+def get_logpath() -> str:
+    return os.path.join(os.getcwd(), 'selenium.log')
 
 def scrape_comments(url):
-    @st.experimental_singleton
-    def get_driver():
-        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Enable headless mode
-    driver = get_driver()
+    driver = webdriver.Chrome(options=get_webdriver_options(),
+                        service=get_webdriver_service())
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
