@@ -45,16 +45,16 @@ def get_chromedriver_path() -> str:
 def get_logpath() -> str:
     return os.path.join(os.getcwd(), 'selenium.log')
 
-def get_webdriver_service() -> ChromeService:
+def get_webdriver_service(logpath) -> ChromeService:
     service = ChromeService(
         executable_path=get_chromedriver_path(),
-        log_output = get_logpath()
+        log_output = logpath
     )
     return service
 
 def scrape_comments(url):
     driver = webdriver.Chrome(options=get_webdriver_options(),
-                        service=ChromeService(ChromeDriverManager().install()))
+                        service=get_webdriver_service(get_logpath))
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
