@@ -4,6 +4,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup as bs
 import re
 import time
@@ -11,9 +13,11 @@ import csv
 
 
 def scrape_comments(url):
+    def get_driver():
+        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Enable headless mode
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = get_driver()
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
