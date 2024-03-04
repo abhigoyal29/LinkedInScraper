@@ -26,7 +26,7 @@ import streamlit as st
 def scrape_comments(url):
     @st.experimental_singleton
     def get_driver():
-        return webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="2.26").install()), options=chrome_options)
+        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Enable headless mode
