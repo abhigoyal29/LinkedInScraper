@@ -1,3 +1,4 @@
 selenium
-webdriver-manager
+webdriver_manager
 beautifulsoup4
+GeckoDriverManager
