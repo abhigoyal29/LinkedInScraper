@@ -20,25 +20,17 @@ from bs4 import BeautifulSoup as bs
 import re
 import time
 import csv
+import streamlit as st
 
 
 def scrape_comments(url):
-    # def get_driver():
-    #     return webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="2.26").install()), options=chrome_options)
-    # firefox_options = Options()
-    # firefox_options.add_argument('--headless')  # Enable headless mode
-    # firefox_binary = FirefoxBinary()
-    # service = Service(GeckoDriverManager().install())
-    # driver = webdriver.Firefox(
-    #     options=firefox_options,
-    #     service=service,
-    #     firefox_binary=firefox_binary
-    # )
+    @st.experimental_singleton
+    def get_driver():
+        return webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="2.26").install()), options=chrome_options)
 
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Enable headless mode
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
+    driver = get_driver()
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
     #Enter login info:
