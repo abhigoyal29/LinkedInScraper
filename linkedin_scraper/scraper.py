@@ -14,7 +14,7 @@ import csv
 
 def scrape_comments(url):
     def get_driver():
-        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        return webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="2.26").install()), options=chrome_options)
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Enable headless mode
     driver = get_driver()
