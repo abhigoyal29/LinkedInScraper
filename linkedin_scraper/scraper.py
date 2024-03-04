@@ -45,8 +45,8 @@ def get_chromedriver_path() -> str:
 def get_logpath() -> str:
     return os.path.join(os.getcwd(), 'selenium.log')
 
-def get_webdriver_service() -> Service:
-    service = Service(
+def get_webdriver_service() -> ChromeService:
+    service = ChromeService(
         executable_path=get_chromedriver_path(),
         log_output = get_logpath()
     )
