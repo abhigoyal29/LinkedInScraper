@@ -14,6 +14,7 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from bs4 import BeautifulSoup as bs
 import re
 import time
@@ -25,10 +26,12 @@ def scrape_comments(url):
     #     return webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="2.26").install()), options=chrome_options)
     firefox_options = Options()
     firefox_options.add_argument('--headless')  # Enable headless mode
+    firefox_binary = FirefoxBinary()
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(
         options=firefox_options,
         service=service,
+        firefox_binary=firefox_binary
     )
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
