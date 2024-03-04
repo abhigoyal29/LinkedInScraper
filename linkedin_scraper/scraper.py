@@ -41,15 +41,16 @@ def get_webdriver_options() -> Options:
 def get_chromedriver_path() -> str:
     return shutil.which('chromedriver')
 
-def get_webdriver_service() -> Service:
-    service = Service(
-        executable_path=get_chromedriver_path()
-    )
-    return service
-
 @st.cache_resource(show_spinner=False)
 def get_logpath() -> str:
     return os.path.join(os.getcwd(), 'selenium.log')
+
+def get_webdriver_service() -> Service:
+    service = Service(
+        executable_path=get_chromedriver_path(),
+        log_output = get_logpath()
+    )
+    return service
 
 def scrape_comments(url):
     driver = webdriver.Chrome(options=get_webdriver_options(),
@@ -68,8 +69,6 @@ def scrape_comments(url):
     
     # Specify the filename for the CSV file
     csv_file = 'emails.csv'
-    # def remove_thank(string):
-    #     return string.replace("Thank", "").replace("Thanks", "").replace("thanks", "").replace("thank", "").replace("interested", "").replace("Interested","")
 
     if url:
         driver.get(url)
