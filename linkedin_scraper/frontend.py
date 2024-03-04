@@ -2,28 +2,65 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import scraper
-
-def fetch_page_title(url):
-    """Fetch and return the title of a webpage."""
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            return soup.title.string
-    except Exception as e:
-        return str(e)
+import time
 
 # Streamlit app layout
 st.title('LinkedIn Comment Scraper')
 
-# Text input for the URL
-url = st.text_input('Enter the URL of a LinkedIn Post:', '')
+def callback():
+    st.session_state.submit = True
 
-# Button to perform action
-if st.button('Scrape LinkedIn Post'):
-    if url:
-        title = scraper.scrape_comments(url)
-        st.success("Scraped comments successfully!")
-    else:
-        st.error('Please enter a URL.')
+def login():
+    st.sidebar.title("Login")
 
+    # Get username and password from user input
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
+    
+    if st.sidebar.button('Submit', on_click=callback) or st.session_state.submit:
+        with open("credentials.txt", "w") as f:
+            f.write(username + "\n")
+            f.write(password + "\n")
+        st.success("Thank you! You can put them in again if your account gets blocked")
+        return True
+
+def enterURL():
+    st.title("URL")
+    st.subheader("Enter the URLs of LinkedIn Posts:")
+    NUM_LINKEDIN_POSTS = 5
+    urls = []
+    # Text input for the URLs
+    for i in range(NUM_LINKEDIN_POSTS):
+        urls.append(st.text_input(f'Url {i} ', '', key = i, label_visibility='hidden'))
+    
+    # Get rid of the empty URLs
+    while("" in urls):
+        urls.remove("")
+
+    # Button to perform action
+    if st.button('Scrape LinkedIn Post'):
+        if urls:
+            progress_bar = st.progress(0, "Fetching emails...")
+            percent_complete = 0
+            for url in urls:
+                scraper.scrape_comments(url)
+                percent_complete += int(100/len(urls))
+                progress_bar.progress(percent_complete, "Fetching emails...")
+        else:
+            st.error('Please enter URLs')
+
+        progress_bar.empty()
+        st.success("Scraped comments successfully! Feel free to put in new URLs")
+        st.text("")
+        st.text("")
+        with open('emails.csv') as f:
+            st.download_button('Download CSV', f, file_name = "linkedin_post_emails.csv")
+def main():
+    if "submit" not in st.session_state:
+        st.session_state.submit = False
+    if login():
+        time.sleep(1)
+        enterURL()
+
+if __name__ == "__main__":
+    main()
