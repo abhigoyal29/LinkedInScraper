@@ -12,7 +12,7 @@ import csv
 
 def scrape_comments(url):
     chrome_options = Options()
-    #chrome_options.add_argument('--headless')  # Enable headless mode
+    chrome_options.add_argument('--headless')  # Enable headless mode
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
