@@ -40,15 +40,16 @@ def enterURL():
     # Button to perform action
     if st.button('Scrape LinkedIn Post'):
         if urls:
-            progress_bar = st.progress(0, "Fetching emails...")
+            progress_bar = st.progress(0, "Fetching from each URL...")
             percent_complete = 0
             for url in urls:
                 scraper.scrape_comments(url)
                 percent_complete += int(100/len(urls))
-                progress_bar.progress(percent_complete, "Fetching emails...")
+                progress_bar.progress(percent_complete, "Fetching from each URL...")
         else:
             st.error('Please enter URLs')
 
+        time.sleep(1.2)
         progress_bar.empty()
         st.success("Scraped comments successfully! Feel free to put in new URLs")
         st.text("")

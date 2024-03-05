@@ -6,15 +6,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
-# from selenium import webdriver
-# from selenium.common.exceptions import TimeoutException
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.firefox.options import Options
-# from selenium.webdriver.firefox.service import Service
-# from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.support.ui import WebDriverWait
-# from webdriver_manager.firefox import GeckoDriverManager
-# from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 from bs4 import BeautifulSoup as bs
 import time
@@ -22,6 +13,7 @@ import csv
 import streamlit as st
 import os
 import shutil
+import math
 
 
 @st.cache_resource(show_spinner=False)
@@ -80,6 +72,8 @@ def scrape_comments(url):
         def load_more(target: str, target_class: str, driver: webdriver.Chrome):
             webdriver_wait = WebDriverWait(driver, 10)
             action = ActionChains(driver)
+            progress_bar = st.progress(0, "Loading comments from current URL...")
+            percent_complete = 0
 
             try:
                 load_more_button = webdriver_wait.until(
@@ -91,20 +85,33 @@ def scrape_comments(url):
 
             print("[", end="", flush=True)
 
+            # Estimate total number of loads or loading time
+            total_loads = 320  # You can estimate this value based on your data
+
             while True:
                 print("#", end="", flush=True)
+                percent_increment = 100 / total_loads
+                percent_complete += int(math.ceil(percent_increment))
+                if percent_complete > 100:
+                    percent_complete = 99
+
+                progress_bar.progress(percent_complete, "Loading comments from current URL...")
+
                 action.move_to_element(load_more_button).click().perform()
-                time.sleep(1)
+                time.sleep(1)  # Adjust sleep time as needed
+
                 try:
                     load_more_button = webdriver_wait.until(
                         EC.element_to_be_clickable((By.CLASS_NAME, target_class))
                     )
                 except:
                     print("]")
+                    percent_complete = 100
+                    time.sleep(1.2)
+                    progress_bar.empty()
                     print(f"All {target} have been displayed!")
                     break
-
-        
+    
         load_more("comments","comments-comments-list__load-more-comments-button", driver)
 
         # load all html source into a file
